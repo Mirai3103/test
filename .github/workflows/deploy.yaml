@@ -41,4 +41,4 @@ jobs:
           pwd
 
           sudo -n podman-compose down || true
-          udo -n podman-compose up -d
+          sudo -n podman-compose up -d
