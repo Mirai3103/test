@@ -35,6 +35,7 @@ jobs:
 
       - name: Deploy stack
         run: |
+          cd gitops
           podman-compose pull
           podman-compose up -d
           podman image prune -f
