@@ -1,0 +1,40 @@
+name: Deploy with Docker Compose
+
+on:
+  workflow_dispatch:
+    inputs:
+      backend1_tag:
+        description: "Tag for backend1"
+        required: true
+        default: "latest"
+      backend2_tag:
+        description: "Tag for backend2"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "mirai3103" --password-stdin
+
+      - name: Generate .env
+        run: |
+          cat > .env <<EOF
+          BACKEND1_TAG=${{ github.event.inputs.backend1_tag }}
+          BACKEND2_TAG=${{ github.event.inputs.backend2_tag }}
+          EOF
+
+      - name: Deploy stack
+        run: |
+          podman compose pull
+          podman compose up -d
+          podman image prune -f
