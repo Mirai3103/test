@@ -58,4 +58,8 @@ app.get("/ping-to/:ip", async (c) => {
   });
 });
 
-export default app;
+export default {
+  port: 3000,
+  fetch: app.fetch,
+  hostname: "0.0.0.0",
+};

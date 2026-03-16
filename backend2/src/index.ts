@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import os from "os";
+import os, { hostname } from "os";
 
 import { SQL } from "bun";
 
@@ -145,4 +145,8 @@ function detectAdapter(databaseUrl: string) {
   return "unknown_or_postgres_fallback";
 }
 
-export default app;
+export default {
+  port: 3000,
+  fetch: app.fetch,
+  hostname: "0.0.0.0",
+};
