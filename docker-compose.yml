@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17.9
+    container_name: pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: appdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend1:
+    build: ./backend1
+    container_name: backend1
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://app:secret@postgres:5432/appdb
+    ports:
+      - "3001:3000"
+    networks:
+      - app_net
+
+  backend2:
+    build: ./backend2
+    container_name: backend2
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://app:secret@postgres:5432/appdb
+    ports:
+      - "3002:3000"
+    networks:
+      - app_net
+
+volumes:
+  pgdata:
+
+networks:
+  app_net:
+    driver: bridge
