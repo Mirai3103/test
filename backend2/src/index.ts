@@ -1,6 +1,7 @@
 import { Hono } from "hono";
-import { SQL } from "bun";
 import os from "os";
+
+import { SQL } from "bun";
 
 const app = new Hono();
 

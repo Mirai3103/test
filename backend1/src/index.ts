@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import os from "os";
-
 const app = new Hono();
+
+import os from "os";
 
 app.get("/info", (c) => {
   const network = os.networkInterfaces();
