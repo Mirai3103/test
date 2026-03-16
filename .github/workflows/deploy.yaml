@@ -39,6 +39,4 @@ jobs:
         run: |
           cd gitops
           pwd
-          podman-compose pull
           podman-compose up -d
-          podman image prune -f
